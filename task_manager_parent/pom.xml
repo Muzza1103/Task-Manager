@@ -9,11 +9,10 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <!-- Liste des modules enfants -->
+
     <modules>
         <module>service-tasks</module>
         <module>service-users</module>
-        <!-- ajoutez d’autres modules (ex : frontend-app) ici -->
     </modules>
 
     <dependencyManagement>
@@ -39,6 +38,40 @@
                 <version>2.1.214</version>
                 <scope>runtime</scope>
             </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.33</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>0.11.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>0.11.5</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>0.11.5</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-jose</artifactId>
+                <version>6.4.4</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
@@ -67,7 +100,6 @@
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
-                <!-- Autres plugins (Docker, tests, quality…) -->
             </plugins>
         </pluginManagement>
     </build>

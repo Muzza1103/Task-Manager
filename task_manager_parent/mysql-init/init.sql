@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS tasksdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS usersdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'tasks'@'%' IDENTIFIED BY 'test1234';
+GRANT ALL ON tasksdb.* TO 'tasks'@'%';
+
+CREATE USER IF NOT EXISTS 'users'@'%' IDENTIFIED BY 'test1234';
+GRANT ALL ON usersdb.* TO 'users'@'%';
+
+FLUSH PRIVILEGES;

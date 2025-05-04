@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-reader
+  namespace: default
+rules:
+  - apiGroups: [""]                   # core API
+    resources: ["secrets", "configmaps"]
+    verbs: ["get"]
+  - apiGroups: [""]                   # core API
+    resources: ["services"]
+    verbs: ["get", "list"]

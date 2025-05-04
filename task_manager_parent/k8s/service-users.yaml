@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-users
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: service-users
+  template:
+    metadata:
+      labels:
+        app: service-users
+    spec:
+      serviceAccountName: app-sa
+      containers:
+        - name: service-users
+          image: muzza1103/task_manager_service-users:latest
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          env:
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USER
+              value: users
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MYSQL_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: JWT_SECRET
+          ports:
+            - containerPort: 8081
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-users
+spec:
+  selector:
+    app: service-users
+  ports:
+    - port: 8081
+      targetPort: 8081
+

@@ -53,24 +53,6 @@ service-\* ↔ MySQL (usersdb & tasksdb)
 
 ---
 
-## 5. Local HTTPS
-
-* Integrated `cert-manager` with a staging Issuer.
-* Configured Ingress TLS.
-* Faced DNS challenges on Windows; tested with nip.io and hosts file workarounds.
-
----
-
-## 6. Cloud Deployment (Render PaaS)
-
-* Chose Render’s free Starter plan.
-* Deployed frontend as a Static Site (HTTPS via Let’s Encrypt).
-* Deployed service-users, service-tasks, and MySQL as Docker Web Services (no persistence).
-* Configured environment variables; observed cold-start behavior.
-* Encountered Hibernate Dialect issues on Render.
-
----
-
 ## Conclusion
 
 This project provided hands-on experience with the full deployment lifecycle: from local Docker and Kubernetes environments to exploring PaaS cloud deployment, covering aspects of security, resilience, and production considerations.

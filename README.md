@@ -1,103 +1,76 @@
-Task Manager
-A simple task management app built with micro-services, containerized and orchestrated locally.
+# Distributed Task Manager Project Report
 
-🚀 Tech Stack
-Frontend: React + Vite served by Nginx
+## Introduction
 
-Backends: Two Spring Boot services
+This report presents the Distributed Task Manager project, outlining its goals, architecture, local deployment (Docker Compose, Kubernetes).
 
-service-users (port 8081): JWT authentication & user management
+---
 
-service-tasks (port 8080): CRUD operations on tasks
+## 1. Context and Objectives
 
-Database: MySQL 5.7, initialized via init.sql
+* **Objectives**: Implement microservices (`service-users`, `service-tasks`), develop a React frontend, expose REST APIs, and use MySQL for persistence.
 
-Orchestration:
+---
 
-Docker Compose for local development
+## 2. System Architecture
 
-Minikube + Kubernetes manifests under k8s/ for a local cluster
+* **Microservices**: Two Spring Boot services (ports 8081 and 8080) exposing REST endpoints.
+* **Frontend SPA**: React + Vite communicating through `/api/users` and `/api/tasks`.
+* **Database**: MySQL 5.7 initialized via `init.sql`.
+* **Authentication**: JWT-based security.
 
-Prerequisites
-Docker & Docker Compose
+**Architecture diagram**:
+Frontend ↔ service-users (auth/login, user creation)
+Frontend ↔ service-tasks (task CRUD)
+service-\* ↔ MySQL (usersdb & tasksdb)
 
-kubectl
+---
 
-Minikube (with Docker driver)
+## 3. Containerization and Local Deployment
 
-Local Setup (Docker Compose)
-Copy and edit environment variables:
+### 3.1 Docker Compose
 
-bash
-Copier
-Modifier
-cp .env.example .env
-# Set MYSQL_PASSWORD and JWT_SECRET
-Start all services:
+* Defined services for MySQL, service-users, service-tasks, and frontend.
+* Mounted initialization script via volume.
+* Configured health checks for automatic restarts.
 
-bash
-Copier
-Modifier
-docker-compose up --build
-Open the app at
-http://localhost:5173
+### 3.2 Kubernetes (Minikube)
 
-Kubernetes Setup (Minikube)
-Start Minikube with Docker:
+* Created PVC for MySQL persistence.
+* ConfigMap for `init.sql` injection.
+* Secrets for database passwords and JWT keys.
+* Deployments and ClusterIP Services for each component.
+* Ingress NGINX for routing HTTP traffic.
+* RBAC and readiness/liveness probes for reliability.
 
-bash
-Copier
-Modifier
-minikube config set driver docker
-minikube start
-minikube addons enable ingress
-Create the MySQL init ConfigMap:
+---
 
-bash
-Copier
-Modifier
-kubectl create configmap mysql-initdb \
-  --from-file=./mysql-init/init.sql
-Apply all manifests:
+## 4. Security and Service Mesh
 
-bash
-Copier
-Modifier
-kubectl apply -f k8s/ --recursive
-Check pod status:
+* **Istio mTLS** experimentation with `PeerAuthentication` and `DestinationRule`.
+* Partial rollback to simpler HTTP due to local constraints.
+* Implemented RBAC, NetworkPolicies for least-privilege networking.
 
-bash
-Copier
-Modifier
-kubectl get pods
-Expose the frontend:
+---
 
-Automatic URL:
+## 5. Local HTTPS
 
-bash
-Copier
-Modifier
-minikube service frontend --url
-Or port-forward:
+* Integrated `cert-manager` with a staging Issuer.
+* Configured Ingress TLS.
+* Faced DNS challenges on Windows; tested with nip.io and hosts file workarounds.
 
-bash
-Copier
-Modifier
-kubectl port-forward svc/frontend 5173:80
-then browse http://localhost:5173
+---
 
-Features
-Sign up / Log in with JWT
+## 6. Cloud Deployment (Render PaaS)
 
-Task dashboard: create, read, update, delete, and toggle done status
+* Chose Render’s free Starter plan.
+* Deployed frontend as a Static Site (HTTPS via Let’s Encrypt).
+* Deployed service-users, service-tasks, and MySQL as Docker Web Services (no persistence).
+* Configured environment variables; observed cold-start behavior.
+* Encountered Hibernate Dialect issues on Render.
 
-Health checks on /health for each service
+---
 
-Next Steps
-Move to a managed Kubernetes cluster (GKE, EKS, AKS)
+## Conclusion
 
-Set up CI/CD (e.g., GitHub Actions)
-
-Add HTTPS in production with cert-manager
-
-Implement E2E tests and monitoring
+This project provided hands-on experience with the full deployment lifecycle: from local Docker and Kubernetes environments to exploring PaaS cloud deployment, covering aspects of security, resilience, and production considerations.
